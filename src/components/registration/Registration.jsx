@@ -31,7 +31,7 @@ const login = () => {
 }
   const handleSubmit =async (e) => {
     e.preventDefault();
-
+console.log(userRegistration);
     try {
         const response = await fetch('http://localhost:5000/users/register', {
           method: 'POST',
@@ -41,8 +41,10 @@ const login = () => {
           body: JSON.stringify(userRegistration),
         });
         console.log(response)
-        if (response.ok) {
+        if (response.ok && response.status===201) {
+          navigate("/login"); 
           // Handle successful insertion (e.g., show a success message)
+
           console.log('Data inserted successfully!');
         } else {
           // Handle insertion failure
@@ -57,9 +59,9 @@ const login = () => {
       ...userRegistration,
       id: new Date().getTime().toString(),
     };
-    setRecords([...records, newRecord]);
-    console.log(records);
-    console.log("I was called");
+    // setRecords([...records, newRecord]);
+    // console.log(records);
+    // console.log("I was called");
 
     setuserRegistration({
       username: "",
@@ -71,31 +73,31 @@ const login = () => {
       gender: "",
 
     });
-    navigate("/login"); 
+   
   };
 
 
    // To retrieve data from the database and display on the page (GET call)
-   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('http://localhost:5000/api/users');
-        if (response.ok) {
-          const data = await response.json();
-          // Handle retrieved data (e.g., set it in state to display on the page)
-          setRecords(data);
-          console.log(data);
-        } else {
-          // Handle failure to fetch data
-          console.error('Failed to fetch data.');
-        }
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    };
+  //  useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch('http://localhost:5000/api/users');
+  //       if (response.ok) {
+  //         const data = await response.json();
+  //         // Handle retrieved data (e.g., set it in state to display on the page)
+  //         setRecords(data);
+  //         console.log(data);
+  //       } else {
+  //         // Handle failure to fetch data
+  //         console.error('Failed to fetch data.');
+  //       }
+  //     } catch (error) {
+  //       console.error('Error:', error);
+  //     }
+  //   };
   
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
   
 
   return (
@@ -213,9 +215,6 @@ const login = () => {
       </div>
       <button
         type="submit"
-        onClick={() => {
-          console.log("hello world");
-        }} 
       >Register
       </button>
     </form>

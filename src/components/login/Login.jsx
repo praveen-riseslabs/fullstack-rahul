@@ -29,12 +29,15 @@ const Login = () => {
         body: JSON.stringify(loginData),
       });
      
-      if (response.ok) {
+      if (response.ok && response.status===201) {
         // Handle successful login (e.g., redirect to dashboard)
         console.log('Login successful!');
-        // navigate("/")
+        navigate("/")
+       const data = response.json();
+       console.log(data);
       } else {
         // Handle login failure
+      
         console.error('Login failed.');
       }
     } catch (error) {
