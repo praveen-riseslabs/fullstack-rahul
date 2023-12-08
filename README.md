@@ -22,7 +22,7 @@ Create a registration page.
 6. For run frontend run npx start commmond
 
 # How its see
-![registration-page](https://github.com/praveen-riseslabs/fullstack-rahul/assets/152582137/887db1af-b1fa-4469-a9d4-92aca5516d35 =250x250)
+![registration-page](https://github.com/praveen-riseslabs/fullstack-rahul/assets/152582137/887db1af-b1fa-4469-a9d4-92aca5516d35)
 ![Emai-link](https://github.com/praveen-riseslabs/fullstack-rahul/assets/152582137/74b14275-f2e6-4687-9a12-9ddfa878ff1a)
 
 
