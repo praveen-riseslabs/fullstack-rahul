@@ -22,7 +22,7 @@ Create a registration page.
 6. For run frontend run npx start commmond
 
 # How its see
-< img src="C:\Users\LENOVO\Downloads\Email_link.jpeg" />
+![Email_link](https://github.com/praveen-riseslabs/fullstack-rahul/assets/152582137/a93fd4bd-6d22-4b0d-ae0a-02bf467e8dd9)
 
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
