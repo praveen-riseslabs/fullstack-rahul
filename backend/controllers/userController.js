@@ -112,15 +112,15 @@ const changePassword = async (req, res) => {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "your-email@gmail.com", // Update with your Gmail email address
-        pass: "your-password", // Update with your Gmail password
+        user: "rahyadav50@gmail.com", // Update with your Gmail email address
+        pass: "ljenyqlomxiqrrgo", // Update with your Gmail password
       },
     });
 
     const mailOptions = {
-      from: "your-email@gmail.com",
-      to: email,
-      subject: "Password Reset",
+      from: "rahyadav50@gmail.com",
+      to: "rahul.yadav@riseslabs.com",
+      subject: "Sending mail using node js",
       text: link,
     };
 
@@ -134,7 +134,7 @@ const changePassword = async (req, res) => {
       }
     });
   } catch (error) {
-    res.status(500).json({ error: "Error during password reset", details: error.message });
+    res.status(500).json({ status: "error during password reset",  message: error.message });
   }
 };
 

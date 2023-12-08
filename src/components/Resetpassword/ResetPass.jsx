@@ -20,7 +20,7 @@ const ResetPassword = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:5000/reset', {
+      const response = await fetch('http://localhost:5000/forgot', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -28,7 +28,7 @@ const ResetPassword = () => {
         body: JSON.stringify(resetData),
       });
 
-      if (response.ok) {
+      if (response.ok && response.status===201) {
         // Handle successful reset request (e.g., display success message)
         console.log('Password reset email sent!');
       } else {

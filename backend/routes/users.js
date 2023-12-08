@@ -16,7 +16,7 @@ const authenticate = require("../middleware/auth");
 router.post("/login", login);
 router.post("/register", createUser);
 router.get("/", authenticate, getAllUsers);
-router.post("/change", authenticate, changePassword);
+router.post("/forgot",  changePassword);
 
 // verify user
 router.get("/verify", authenticate, (req, res) => {
