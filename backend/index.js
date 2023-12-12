@@ -1,14 +1,90 @@
 const express = require("express");
 const bodyParser = require('body-parser');
 const cors = require("cors");
+const multer = require("multer")
+const fs = require('fs');
+
+const AWS = require('aws-sdk');
+
 
 const app = express();
 app.use(bodyParser.json());
 
-
-
 app.use(cors());
 const origin = ["http://localhost:3000"];
+
+
+const s3 = new AWS.S3({
+  accessKeyId: 'AKIAVAND6V4DPBNIYBPC',
+  secretAccessKey: 'pvMYroioWJwIXoT6wLNQ/jTDc7i+8FSgI+i00vKx+JXEhV8jE',
+  region: 'ap.south-1',
+});
+
+app.post('/upload', (req, res) => {
+  const uploadParams = {
+    Bucket: 'myBucket',
+    Key: req.file.originalname,
+    Body: req.file.buffer,
+  };
+
+  s3.upload(uploadParams, (err, data) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send('Failed to upload file');
+    }
+    res.send('File uploaded successfully');
+  });
+});
+
+app.delete('/delete/:key', (req, res) => {
+  const deleteParams = {
+    Bucket: 'myBucket',
+    Key: req.params.key,
+  };
+
+  s3.deleteObject(deleteParams, (err, data) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send('Failed to delete file');
+    }
+    res.send('File deleted successfully');
+  });
+});
+
+app.put('/edit/:key', (req, res) => {
+  const copyParams = {
+    Bucket: 'myBucket',
+    CopySource: `myBucket/${req.params.key}`,
+    Key: req.body.editedFileName,
+  };
+
+  s3.copyObject(copyParams, (err, data) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send('Failed to edit file name');
+    }
+    
+    const deleteParams = {
+      Bucket: 'myBucket',
+      Key: req.params.key,
+    };
+  
+    s3.deleteObject(deleteParams, (deleteErr, deleteData) => {
+      if (deleteErr) {
+        console.error(deleteErr);
+        return res.status(500).send('Failed to delete old file');
+      }
+      res.send('File edited successfully');
+    });
+  });
+});
+
+
+
+
+
+
+
 
 //database connection
 const connect = require("./config/database");
