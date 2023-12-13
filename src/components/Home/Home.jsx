@@ -6,22 +6,23 @@ const Home = () => {
   const [fileName, setFileName] = useState('');
   const [fileList, setFileList] = useState([]);
 
-  useEffect(() => {
-    // Fetch initial list of files from the backend upon component mount
-    fetchFiles();
-  }, []);
+  // useEffect(() => {
+  //   // Fetch initial list of files from the backend upon component mount
+  //   fetchFiles();
+  // }, []);
 
   const uploadFile = async () => {
     const formData = new FormData();
     formData.append('file', file);
 
     try {
-      await axios.post('http://localhost:5000/upload', formData, {
+    const data=   await axios.post('http://localhost:5000/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-      fetchFiles();
+      setFileList([...fileList, data.data.filename])
+      console.log(data)
     } catch (error) {
       console.error('Failed to upload file:', error);
     }
@@ -38,8 +39,8 @@ const Home = () => {
 
   const deleteFile = async (fileName) => {
     try {
-      await axios.delete(`http://localhost:5000/delete/${fileName}`);
-      fetchFiles();
+      await axios.delete(`http://localhost:5000/deleteObject/${fileName}`);
+      console.log(deleteFile);
     } catch (error) {
       console.error('Failed to delete file:', error);
     }
