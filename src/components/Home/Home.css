@@ -1,49 +1,12 @@
-
-.DoctorVisit {
-    margin-bottom: 20px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .DoctorVisit button {
-    margin-top: 10px;
-    padding: 5px 10px;
-    cursor: pointer;
-  }
-  
-  .DoctorVisit input[type="text"] {
-    margin-bottom: 5px;
-    padding: 5px;
-    width: 100%;
-    box-sizing: border-box;
-  }
-  
-  /* Style for DoctorVisitsManager component */
-  .DoctorVisitsManager {
+.home-container {
     font-family: Arial, sans-serif;
-    max-width: 600px;
+    /* padding: 20px;
+    max-width: 800px; */
     margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #990f0f;
-    border-radius: 5px;
-    background-color: #861717;
   }
   
-  .DoctorVisitsManager h2 {
-    margin-bottom: 20px;
+  .component-column {
+    
+    display: flex;
+   
   }
-  
-  .DoctorVisitsManager button {
-    padding: 10px 20px;
-    cursor: pointer;
-    background-color: #18c53d;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-  }
-  
-  .DoctorVisitsManager button:hover {
-    background-color: #39c081;
-  }
-  

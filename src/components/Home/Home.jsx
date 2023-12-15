@@ -2,14 +2,18 @@ import React from 'react';
 import DoctorVisitsManager from '../../pages/DoctorVisits/DoctorVisitsManager';
 import HealthRecords from '../../pages/HealthRecords/HealthRecords';
 import MedicationDetails from '../../pages/MedicationDetails/MedicationDetails';
+import './Home.css'
 
 const Home = () => {
   return (
-    <div>
-      <DoctorVisitsManager></DoctorVisitsManager>
-      <HealthRecords></HealthRecords>
-      <MedicationDetails></MedicationDetails>
+    <div className="home-container">
+    <h1>Welcome to Your Health Dashboard</h1>
+    <div className="component-column">
+      <DoctorVisitsManager />
+      <HealthRecords />
+      <MedicationDetails />
     </div>
+  </div>
   );
 }
 
