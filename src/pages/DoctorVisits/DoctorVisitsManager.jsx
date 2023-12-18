@@ -1,71 +1,126 @@
-import React, { useState } from 'react';
-import './DoctorVisits.css'
+import React, { useState, useEffect } from 'react';
+import "./DoctorVisits.css"; 
+import axios from 'axios';
 
-// Doctor Visit Component
-const DoctorVisit = ({ visit, index, modifyVisit }) => {
-  const [editing, setEditing] = useState(false);
-  const [date, setDate] = useState(visit.date);
-  const [doctorName, setDoctorName] = useState(visit.doctorName);
-  const [reason, setReason] = useState(visit.reason);
 
-  const handleSave = () => {
-    modifyVisit(index, date, doctorName, reason);
-    setEditing(false);
+const DoctorVisits = () => {
+  const [visits, setVisits] = useState([]);
+  const [editingVisit, setEditingVisit] = useState(null);
+  const [newVisit, setNewVisit] = useState({ date: '', doctorName: '', reason: '' });
+
+  // Fetch all doctor visits on component mount
+  useEffect(() => {
+    async function fetchVisits() {
+      try {
+        const response = await axios.get('http://localhost:5000/doctor-visits');
+        setVisits(response.data);
+      } catch (error) {
+        console.error('Failed to fetch doctor visits:', error);
+      }
+    }
+    fetchVisits();
+  }, []);
+
+  const handleEditClick = (visit) => {
+    setEditingVisit(visit);
+  };
+
+  const handleSaveEdit = async (editedVisit) => {
+    try {
+      await axios.put(`http://localhost:5000/doctor/:id/${editedVisit._id}`, editedVisit);
+      setEditingVisit(null);
+      // Refetch the updated visits list after editing
+      const response = await axios.get('http://localhost:5000/doctor/:id');
+      setVisits(response.data);
+    } catch (error) {
+      console.error('Failed to update doctor visit:', error);
+    }
+  };
+
+  const handleDelete = async (visitId) => {
+    try {
+      console.log(visitId)
+      await axios.delete(`http://localhost:5000/doctor-delete/${visitId}`);
+      // Filter out the deleted visit from the list
+      setVisits(visits.filter((visit) => visit._id !== visitId));
+    } catch (error) {
+      console.error('Failed to delete doctor visit:', error);
+    }
+  };
+
+  const handleAddVisit = async () => {
+    try {
+      console.log(newVisit);
+      const response = await axios.post('http://localhost:5000/doctor', newVisit);
+      setVisits([...visits, response.data]);
+      setNewVisit({ date: '', doctorName: '', reason: '' });
+    } catch (error) {
+      console.error('Failed to add new doctor visit:', error);
+    }
   };
 
   return (
-    <div>
-      {!editing ? (
-        <div>
-          <p>Date: {visit.date}</p>
-          <p>Doctor: {visit.doctorName}</p>
-          <p>Reason: {visit.reason}</p>
-          <button onClick={() => setEditing(true)}>Edit</button>
-        </div>
-      ) : (
-        <div>
-          <input type="text" value={date} onChange={(e) => setDate(e.target.value)} />
-          <input type="text" value={doctorName} onChange={(e) => setDoctorName(e.target.value)} />
-          <input type="text" value={reason} onChange={(e) => setReason(e.target.value)} />
-          <button onClick={handleSave}>Save</button>
-        </div>
-      )}
-    </div>
-  );
-};
-
-// Doctor Visits Manager Component
-const DoctorVisitsManager = () => {
-  const [visits, setVisits] = useState([
-    { date: '2023-12-15', doctorName: 'Dr. Smith', reason: 'Check-up' },
-    { date: '2023-12-20', doctorName: 'Dr. Johnson', reason: 'Follow-up' },
-  ]);
-
-  const addVisit = () => {
-    // Logic to add a new visit
-    // Assuming the new visit details are entered through a form and added to 'visits' state
-  };
-
-  const modifyVisit = (index, date, doctorName, reason) => {
-    const updatedVisits = [...visits];
-    updatedVisits[index] = { date, doctorName, reason };
-    setVisits(updatedVisits);
-  };
-
-  return (
-    <div className="DoctorVisitsManager">
+    <div className='DoctorVisits'>
       <h2>Doctor Visits</h2>
-      {visits.map((visit, index) => (
-        <DoctorVisit
-          key={index}
-          index={index}
-          visit={visit}
-          modifyVisit={modifyVisit}
+      <div>
+        <h3>Add New Visit</h3>
+        <input
+          type="text"
+          placeholder="Date"
+          value={newVisit.date}
+          onChange={(e) => setNewVisit({ ...newVisit, date: e.target.value })}
         />
-      ))}
-      <button onClick={addVisit}>Add Visit</button>
+        <input
+          type="text"
+          placeholder="Doctor Name"
+          value={newVisit.doctorName}
+          onChange={(e) => setNewVisit({ ...newVisit, doctorName: e.target.value })}
+        />
+        <input
+          type="text"
+          placeholder="Reason"
+          value={newVisit.reason}
+          onChange={(e) => setNewVisit({ ...newVisit, reason: e.target.value })}
+        />
+        <br></br><br></br>
+        <button onClick={handleAddVisit}>Add Visit</button>
+      </div>
+      <ul>
+        {visits.map((visit) => (
+          <li key={visit._id}>
+            {editingVisit === visit ? (
+              <div>
+                <input
+                  type="text"
+                  value={visit.date}
+                  onChange={(e) => setEditingVisit({ ...visit, date: e.target.value })}
+                />
+                <input
+                  type="text"
+                  value={visit.doctorName}
+                  onChange={(e) => setEditingVisit({ ...visit, doctorName: e.target.value })}
+                />
+                <input
+                  type="text"
+                  value={visit.reason}
+                  onChange={(e) => setEditingVisit({ ...visit, reason: e.target.value })}
+                />
+                <button onClick={() => handleSaveEdit(editingVisit)}>Save</button>
+              </div>
+            ) : (
+              <div>
+                <p>Date: {visit.date}</p>
+                <p>Doctor: {visit.doctorName}</p>
+                <p>Reason: {visit.reason}</p>
+                <button onClick={() => handleEditClick(visit)}>Edit</button>
+                <button onClick={() => handleDelete(visit._id)}>Delete</button>
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
 
-export default DoctorVisitsManager;
+export default DoctorVisits;

@@ -1,48 +1,98 @@
-const AWS = require('aws-sdk');
-const fs = require('fs');
+require("aws-sdk/lib/maintenance_mode_message").suppress = true;
 
-// Configure AWS credentials and S3 object
-const s3 = new AWS.S3({
-  accessKeyId: 'AKIAVAND6V4DPBNIYBPC',
-  secretAccessKey: 'pvMYroioWJwIXoT6wLNQ/jTDc7i+8FSgI+i00vKx+JXEhV8jE'
+const {
+  DeleteObjectCommand,
+  GetObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} = require("@aws-sdk/client-s3");
+
+const s3 = new S3Client({
+  credentials: {
+    accessKeyId: "AKIAVAND6V4DC36JGN47",
+    secretAccessKey: "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",
+  },
+  region: "ap-south-1",
 });
 
-// File details
-const filePath = '"D:\a\DESKTOP DOC\rahul yadav (german).docx"'; // Replace with your file path
-const bucketName = 'rises-labs'; // Replace with your bucket name
+const app = express();
+app.use(bodyParser.json());
 
-// Read file content
-const fileContent = fs.readFileSync(filePath);
+app.use(cors());
+const origin = ["http://localhost:3000"];
 
-// Upload parameters
-const params = {
-  Bucket: bucketName,
-  Key: 'file.txt', // Replace with your desired file name in the bucket
-  Body: fileContent
-};
+// Multer disk storage configuration
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/"); // Set your desired folder to save files
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname); // Custom file naming (timestamp + original filename)
+  },
+});
 
-// Upload file to the bucket
-s3.upload(params, (err, data) => {
-  if (err) {
+const upload = multer({ storage: storage });
+
+// Handle file upload
+app.post("/upload", upload.single("file"), async (req, res) => {
+  if (!req.file) {
+    return res.status(400).send("No file uploaded.");
+  }
+  const params = {
+    Bucket: "riseslabs",
+    Key: req.file.originalname,
+    Body: req.file.buffer,
+    ContentType: req.file.mimetype,
+  };
+  const command = new PutObjectCommand(params);
+  await s3.send(command);
+  // res.send('File uploaded successfully');
+  res.status(200).json({ filename: req.file.originalname });
+});
+
+// Get object endpoint
+app.get("/getObject/:key", async (req,res) => {
+  const key = req.params.key;
+  try {
+    //Fetch file from s3
+    const getObjectParam = {
+      Bucket: "riseslabs",
+      Key: key,
+    };
+    const data = await s3.send(new GetObjectCommand(getObjectParam));
+    res.send(data.Body);
+  } catch (error) {
     console.error(err);
-  } else {
-    console.log('File uploaded successfully:', data.Location);
+    res.status(500).send('Failed to retrieve file');
   }
 });
 
-// Retrieve file from S3
-const getObjectParams = {
-    Bucket: bucketName,
-    Key: 'file.txt' // Replace with the file key you want to retrieve
-  };
-  
-  s3.getObject(getObjectParams, (err, data) => {
-    if (err) {
-      console.error(err);
-    } else {
-      // File content is available in data.Body
-      fs.writeFileSync('downloaded-file.txt', data.Body);
-      console.log('File downloaded successfully');
-    }
+// Delete Object Endpoint
+app.delete("/deleteObject/:key", async (req,res) => {
+  const key = req.params.key;
+  try {
+    // Delete file from S3
+    const deleteObjectParams = {
+      Bucket: "riseslabs",
+      Key: key,
+    };
+    await s3.send(new DeleteObjectCommand(deleteObjectParams));
+    res.send('File deleted successfully');
+  } catch (error) {
+    console.error(err);
+    res.status(500).send('Failed to delete file');
+  }
+});
+
+
+
+//database connection
+const connect = require("./config/database");
+connect
+  .then(() => {
+    console.log("Successfully connected to database");
+  })
+  .catch((err) => {
+    console.log("error");
+    process.exit(1);
   });
-  

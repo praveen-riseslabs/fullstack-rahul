@@ -1,45 +1,82 @@
-import React, { useState } from 'react';
-import './MedicationDetails.css'; // Import CSS file for styling
-
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import "./MedicationDetails.css";
 const MedicationDetails = () => {
-  // State for managing medication details
-  const [medications, setMedications] = useState([
-    // Initial medication data (you can populate this array with your data structure)
-    { name: 'Dolo 650', dosage: '500mg', frequency: 'Twice a day' },
-    // Add more initial medication data as needed
-  ]);
+  const [medications, setMedications] = useState([]);
+  const [newMedication, setNewMedication] = useState({
+    name: '',
+    dosage: '',
+    frequency: ''
+  });
 
-  // Function to add a new medication
-  const addMedication = () => {
-    // Logic to add a new medication to the medications state
+  useEffect(() => {
+    getAllMedications();
+  }, []);
+
+  const getAllMedications = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/medications-getall');
+      setMedications(response.data);
+    } catch (error) {
+      console.error('Error fetching medications:', error);
+    }
   };
 
-  // Function to delete a medication
-  const deleteMedication = (index) => {
-    // Logic to delete a medication from the medications state
+  const addMedication = async (e) => {
+    e.preventDefault()
+    try {
+      console.log(newMedication);
+      const response = await axios.post('http://localhost:5000/medications', newMedication);
+      setMedications([...medications, response.data]);
+      setNewMedication({ name: '', dosage: '', frequency: '' });
+    } catch (error) {
+      console.error('Error adding medication:', error);
+    }
+  };
+
+  const deleteMedication = async (id) => {
+    try {
+      await axios.delete(`http://localhost:5000/delete-medications/${id}`);
+      const updatedMedications = medications.filter((medication) => medication._id !== id);
+      setMedications(updatedMedications);
+    } catch (error) {
+      console.error('Error deleting medication:', error);
+    }
   };
 
   return (
     <div className="medication-details-container">
       <h2>Medication Details</h2>
 
-      {/* Form for adding new medication */}
-      <form className="add-medication-form" onSubmit={addMedication}>
-        <input type="text" placeholder="Medication Name" />
-        <input type="text" placeholder="Dosage" />
-        <input type="text" placeholder="Frequency" />
-        <button type="submit">Add Medication</button>
+      <form className='add-medication-form' >
+        <input
+          type="text"
+          placeholder="Medication Name"
+          value={newMedication.name}
+          onChange={(e) => setNewMedication({ ...newMedication, name: e.target.value })}
+        />
+        <input
+          type="text"
+          placeholder="Dosage"
+          value={newMedication.dosage}
+          onChange={(e) => setNewMedication({ ...newMedication, dosage: e.target.value })}
+        />
+        <input
+          type="text"
+          placeholder="Frequency"
+          value={newMedication.frequency}
+          onChange={(e) => setNewMedication({ ...newMedication, frequency: e.target.value })}
+        />
+        <button type="submit"  onClick={addMedication}>Add Medication</button>
       </form>
 
-      {/* Display medication details */}
       <div className="medications-list">
-        {medications.map((medication, index) => (
-          <div className="medication-item" key={index}>
+        {medications.map((medication) => (
+          <div className="medication-item" key={medication._id}>
             <p>Name: {medication.name}</p>
             <p>Dosage: {medication.dosage}</p>
             <p>Frequency: {medication.frequency}</p>
-            {/* Delete button for each medication */}
-            <button onClick={() => deleteMedication(index)}>Delete</button>
+            <button onClick={() => deleteMedication(medication._id)}>Delete</button>
           </div>
         ))}
       </div>

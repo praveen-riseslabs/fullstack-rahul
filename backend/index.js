@@ -108,8 +108,13 @@ app.use(cors({ origin: ["http://localhost:3000"], credentials: true }));
 
 //--------------------ROUTES----------------
 const userRoutes = require("./routes/users");
+const doctorvisitRoutes = require("./routes/doctorvisit");
+const medicationRoutes = require("./routes/medication")
 
 app.use("/users", userRoutes);
+app.use('/', doctorvisitRoutes);
+app.use ('/',medicationRoutes )
+
 app.get("/check", (req, res) => {
   console.log(req.cookies);
   res.send("ok");
