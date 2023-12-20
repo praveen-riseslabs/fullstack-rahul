@@ -1,8 +1,14 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 .home-container {
     font-family: Arial, sans-serif;
-    /* padding: 20px;
-    max-width: 800px; */
+   
+    /* max-width: 800px; */
     margin: 0 auto;
+    width: 100vw;
   }
   
   .component-column {

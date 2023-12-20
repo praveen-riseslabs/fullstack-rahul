@@ -4,6 +4,9 @@ const medicationSchema = new mongoose.Schema({
     name: String,
     dosage: String,
     frequency: String,
+    date: String,
+  doctorName: String,
+  reason: String,
   });
   
   const Medication = mongoose.model('Medication', medicationSchema);

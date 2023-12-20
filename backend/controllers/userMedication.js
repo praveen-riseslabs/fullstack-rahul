@@ -10,9 +10,9 @@ const getAllMedications = async (req, res) => {
 };
 
 const addMedication = async (req, res) => {
-  const { name, dosage, frequency } = req.body;
+  const { name, dosage, frequency, date, doctorName, reason  } = req.body;
   try {
-    const newMedication = new Medication({ name, dosage, frequency });
+    const newMedication = new Medication({ name, dosage, frequency, date, doctorName, reason  });
     await newMedication.save();
     res.status(201).json(newMedication);
   } catch (err) {
