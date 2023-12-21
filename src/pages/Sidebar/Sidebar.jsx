@@ -4,7 +4,7 @@ import "./Sidebar.css"; // Import the CSS file
 
 const Sidebar = () => {
   return (
-    <aside>
+    <aside className="leftbar">
       <div className="top">
         <div className="logo">
           <img src="./rises.jpeg" alt="" />

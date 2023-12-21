@@ -1,6 +1,6 @@
 /* Sidebar.css */
 
-aside {
+.leftbar {
     width: 250px;
     height: 100vh;
     background-color: #f5f5f5;
@@ -50,6 +50,7 @@ aside {
     align-items: center;
     margin-bottom: 15px;
     transition: background-color 0.3s ease;
+    background-color: yellow;
     
     
   }
@@ -67,3 +68,24 @@ aside {
     margin-right: 10px;
   }
   
+
+  
+  @media screen and (max-width: 768px) {
+
+    .top {
+        background-color: red;
+        display: none;
+    }
+  
+  
+    .sidebar {
+        background-color: red;
+        display: none;
+    }
+  
+
+  
+   
+  
+    /* Other styles to accommodate smaller screens */
+  }

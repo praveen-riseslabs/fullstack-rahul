@@ -20,7 +20,7 @@ const Middle = () => {
     reason: "",
   });
 
-  // Fetch all doctor visits on component mount
+//   Fetch all doctor visits on component mount
   useEffect(() => {
     async function fetchVisits() {
       try {
@@ -100,7 +100,7 @@ const Middle = () => {
       console.log(newMedication);
       const response = await axios.post(
         "http://localhost:5000/medications",
-        newMedication
+        newMedication,newVisit
       );
       setMedications([...medications, ...visits, response.data]);
       setNewMedication({ name: "", dosage: "", frequency: "" , date: "", doctorName: "", reason: "" });
@@ -128,27 +128,22 @@ const Middle = () => {
         <h2>Doctor Visits</h2>
         <div>
         <form className="add-medication-form">
-          <h3>Add New Visit</h3>
-          <input
-            type="text"
-            placeholder="Date"
-            value={newVisit.date}
-            onChange={(e) => setNewVisit({ ...newVisit, date: e.target.value })}
-          />
+          {/* <h3>Add New Visit</h3> */}
+       
           <input
             type="text"
             placeholder="Doctor Name"
-            value={newVisit.doctorName}
+            value={newMedication.doctorName}
             onChange={(e) =>
-              setNewVisit({ ...newVisit, doctorName: e.target.value })
+              setNewMedication({ ...newMedication, doctorName: e.target.value })
             }
           />
           <input
             type="text"
             placeholder="Reason"
-            value={newVisit.reason}
+            value={newMedication.reason}
             onChange={(e) =>
-              setNewVisit({ ...newVisit, reason: e.target.value })
+                setNewMedication({ ...newMedication, reason: e.target.value })
             }
           />
 {/* old start */}
@@ -176,11 +171,17 @@ const Middle = () => {
               setNewMedication({ ...newMedication, frequency: e.target.value })
             }
           />
+             <input
+            type= "date"
+            placeholder="Date"
+            value={newMedication.date}
+            onChange={(e) => setNewMedication({ ...newMedication, date: e.target.value })}
+          />
 
 {/* old continue */}
-          <button onClick={handleAddVisit}>Add Visit</button>
+          {/* <button onClick={handleAddVisit}>Add Visit</button> */}
           <button type="submit" onClick={addMedication}>
-            Add Medication
+            Submit
           </button>
           </form>
         </div>
@@ -210,19 +211,19 @@ const Middle = () => {
                       setEditingVisit({ ...visit, reason: e.target.value })
                     }
                   />
-                  <button onClick={() => handleSaveEdit(editingVisit)}>
+                  {/* <button onClick={() => handleSaveEdit(editingVisit)}>
                     Save
-                  </button>
+                  </button> */}
                 </div>
               ) : (
                 <div>
                   <p>Date: {visit.date}</p>
                   <p>Doctor: {visit.doctorName}</p>
                   <p>Reason: {visit.reason}</p>
-                  <button onClick={() => handleEditClick(visit)}>Edit</button>
+                  {/* <button onClick={() => handleEditClick(visit)}>Edit</button>
                   <button onClick={() => handleDelete(visit._id)}>
                     Delete
-                  </button>
+                  </button> */}
                 </div>
               )}
             </li>
@@ -240,7 +241,7 @@ const Middle = () => {
           </button>
         </form> */}
 
-        <div className="medications-list">
+        {/* <div className="medications-list">
           {medications.map((medication) => (
             <div className="medication-item" key={medication._id}>
                   <p>Date: {medication.date}</p>
@@ -254,7 +255,42 @@ const Middle = () => {
               </button>
             </div>
           ))}
+        </div> */}
+
+<div className="medications-table">
+          
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Doctor</th>
+                <th>Reason</th>
+                <th>Name</th>
+                <th>Dosage</th>
+                <th>Frequency</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {medications.map((medication) => (
+                <tr key={medication._id}>
+                  <td>{medication.date}</td>
+                  <td>{medication.doctorName}</td>
+                  <td>{medication.reason}</td>
+                  <td>{medication.name}</td>
+                  <td>{medication.dosage}</td>
+                  <td>{medication.frequency}</td>
+                  <td>
+                    <button onClick={() => deleteMedication(medication._id)}>
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
+      
       </div>
     </>
   );
