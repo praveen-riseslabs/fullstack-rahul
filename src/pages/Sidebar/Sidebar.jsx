@@ -11,7 +11,7 @@ const Sidebar = () => {
           {/* <h2>Vega</h2> */}
         </div>
         <div className="close" id="close-btn">
-          <span className="material-icons-sharp"> close </span>
+          {/* <span className="material-icons-sharp"> close </span> */}
         </div>
       </div>
       <div className="sidebar">

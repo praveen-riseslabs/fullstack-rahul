@@ -2,11 +2,12 @@
 
 .DoctorVisits {
     width: 100vw;
+    height: 100vh;
     margin: 0 auto;
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    background-color: #f9f9f9;
+    background-color:  #f5f5f5;
   }
   
    .medication-details-container h2 {
@@ -27,6 +28,14 @@
   } 
   
   .add-medication-form input[type="text"] {
+    width: 550px;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    
+  } 
+  .add-medication-form input[type="date"] {
     width: 550px;
     padding: 8px;
     border-radius: 4px;
@@ -107,16 +116,56 @@
 /* Add media query for smaller screens */
 @media screen and (max-width: 768px) {
    .DoctorVisits{
-    grid-template-columns: 1fr;
-    height: 100%;
-    width: 100%;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
    }
-   .medication-details-container h2{
-    grid-template-columns: 1fr;
+   
+    .medication-details-container h2 {
+        
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+        align-items: center;
+        justify-content: center;
+      
+      }
 
-   }
+
    .add-medication-form{
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+    margin-top: 5px;
+    margin-left: 10px;
+    
+   }
+   .add-medication-form input[type="date"]{
+    width: 250px;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+   }
+   .add-medication-form input[type="text"]{
+    width: 250px;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+   }
+   .medications-table{
+    display: none;
+    
+   }
+   .submmitbutton{
+    margin-left: 10px;
+   }
+   form{
+    width: 400px;
    }
   }
   

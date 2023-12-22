@@ -180,7 +180,7 @@ const Middle = () => {
 
 {/* old continue */}
           {/* <button onClick={handleAddVisit}>Add Visit</button> */}
-          <button type="submit" onClick={addMedication}>
+          <button type="submit" onClick={addMedication} className="submmitbutton">
             Submit
           </button>
           </form>

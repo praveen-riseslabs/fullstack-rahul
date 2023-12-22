@@ -10,7 +10,7 @@ const Home = () => {
   return (
     <div className="home-container">
     <nav className="navbar">
-      <div className="navbar-brand">Welcome to Your Health Dashboard</div>
+      <div className="navbar-brand">Welcome to Your Dashboard</div>
       <ul className="navbar-nav">
         <li className="nav-item">
           <a href="#" className="nav-link">Home</a>
