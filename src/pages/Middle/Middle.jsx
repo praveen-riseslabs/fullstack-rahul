@@ -21,61 +21,61 @@ const Middle = () => {
   });
 
 //   Fetch all doctor visits on component mount
-  useEffect(() => {
-    async function fetchVisits() {
-      try {
-        const response = await axios.get("http://localhost:5000/doctor-visits");
-        setVisits(response.data);
-      } catch (error) {
-        console.error("Failed to fetch doctor visits:", error);
-      }
-    }
-    fetchVisits();
-  }, []);
+//   useEffect(() => {
+//     async function fetchVisits() {
+//       try {
+//         const response = await axios.get("http://localhost:5000/doctor-visits");
+//         setVisits(response.data);
+//       } catch (error) {
+//         console.error("Failed to fetch doctor visits:", error);
+//       }
+//     }
+//     fetchVisits();
+//   }, []);
 
-  const handleEditClick = (visit) => {
-    setEditingVisit(visit);
-  };
+//   const handleEditClick = (visit) => {
+//     setEditingVisit(visit);
+//   };
 
-  const handleSaveEdit = async (editedVisit) => {
-    try {
-      await axios.put(
-        `http://localhost:5000/doctor/:id/${editedVisit._id}`,
-        editedVisit
-      );
-      setEditingVisit(null);
-      // Refetch the updated visits list after editing
-      const response = await axios.get("http://localhost:5000/doctor/:id");
-      setVisits(response.data);
-    } catch (error) {
-      console.error("Failed to update doctor visit:", error);
-    }
-  };
+//   const handleSaveEdit = async (editedVisit) => {
+//     try {
+//       await axios.put(
+//         `http://localhost:5000/doctor/:id/${editedVisit._id}`,
+//         editedVisit
+//       );
+//       setEditingVisit(null);
+//       // Refetch the updated visits list after editing
+//       const response = await axios.get("http://localhost:5000/doctor/:id");
+//       setVisits(response.data);
+//     } catch (error) {
+//       console.error("Failed to update doctor visit:", error);
+//     }
+//   };
 
-  const handleDelete = async (visitId) => {
-    try {
-      console.log(visitId);
-      await axios.delete(`http://localhost:5000/doctor-delete/${visitId}`);
-      // Filter out the deleted visit from the list
-      setVisits(visits.filter((visit) => visit._id !== visitId));
-    } catch (error) {
-      console.error("Failed to delete doctor visit:", error);
-    }
-  };
+//   const handleDelete = async (visitId) => {
+//     try {
+//       console.log(visitId);
+//       await axios.delete(`http://localhost:5000/doctor-delete/${visitId}`);
+//       // Filter out the deleted visit from the list
+//       setVisits(visits.filter((visit) => visit._id !== visitId));
+//     } catch (error) {
+//       console.error("Failed to delete doctor visit:", error);
+//     }
+//   };
 
-  const handleAddVisit = async () => {
-    try {
-      console.log(newVisit);
-      const response = await axios.post(
-        "http://localhost:5000/doctor",
-        newVisit
-      );
-      setVisits([...visits, response.data]);
-      setNewVisit({ date: "", doctorName: "", reason: "" });
-    } catch (error) {
-      console.error("Failed to add new doctor visit:", error);
-    }
-  };
+//   const handleAddVisit = async () => {
+//     try {
+//       console.log(newVisit);
+//       const response = await axios.post(
+//         "http://localhost:5000/doctor",
+//         newVisit
+//       );
+//       setVisits([...visits, response.data]);
+//       setNewVisit({ date: "", doctorName: "", reason: "" });
+//     } catch (error) {
+//       console.error("Failed to add new doctor visit:", error);
+//     }
+//   };
 
   //-------------------------------medical--------------------------
 
@@ -108,6 +108,18 @@ const Middle = () => {
       console.error("Error adding medication:", error);
     }
   };
+
+  const editMeditcation = async (id) => {
+   try{
+     await axios.put(`http://localhost:5000/delete-medications/${id}`);
+    const updatedOne = medications.filter(
+        (medication) => medication._id !== id
+    );
+    setMedications(updatedOne);
+  } catch (error) {
+    console.error("Error deleting medication:", error);
+  }
+};
 
   const deleteMedication = async (id) => {
     try {
@@ -268,7 +280,8 @@ const Middle = () => {
                 <th>Name</th>
                 <th>Dosage</th>
                 <th>Frequency</th>
-                <th>Actions</th>
+                <th>Delete</th>
+                <th>Edit</th>
               </tr>
             </thead>
             <tbody>
@@ -283,6 +296,11 @@ const Middle = () => {
                   <td>
                     <button onClick={() => deleteMedication(medication._id)}>
                       Delete
+                    </button>
+                  </td>
+                  <td>
+                    <button onClick={() => editMeditcation(medication._id)}>
+                      Edit
                     </button>
                   </td>
                 </tr>
