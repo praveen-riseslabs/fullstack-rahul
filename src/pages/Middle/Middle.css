@@ -44,6 +44,15 @@
     box-sizing: border-box;
     
   } 
+
+  .add-medication-form input[type="file"] {
+    width: 550px;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    
+  } 
   
   .add-medication-form button {
     padding: 8px 16px;

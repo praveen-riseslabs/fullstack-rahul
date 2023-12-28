@@ -3,8 +3,9 @@ import axios from "axios";
 import "./Middle.css";
 
 const Middle = () => {
-  const [medications, setMedications] = useState([]);
-  const [newMedication, setNewMedication] = useState({
+    const [visits, setVisits] = useState([]);
+    const [editingVisit, setEditingVisit] = useState(null);
+    const [newVisit, setNewVisit] = useState({
     name: "",
     dosage: "",
     frequency: "",
@@ -12,13 +13,7 @@ const Middle = () => {
     doctorName: "",
     reason: "",
   });
-  const [visits, setVisits] = useState([]);
-  const [editingVisit, setEditingVisit] = useState(null);
-  const [newVisit, setNewVisit] = useState({
-    date: "",
-    doctorName: "",
-    reason: "",
-  });
+ 
 
 
 
@@ -33,46 +28,46 @@ const Middle = () => {
       const response = await axios.get(
         "http://localhost:5000/medications-getall"
       );
-      setMedications(response.data);
+      setVisits(response.data);
     } catch (error) {
       console.error("Error fetching medications:", error);
     }
   };
 
-  const addMedication = async (e) => {
+  const addVisit = async (e) => {
     e.preventDefault();
     try {
-      console.log(newMedication);
+      console.log(newVisit);
       const response = await axios.post(
         "http://localhost:5000/medications",
-        newMedication,newVisit
+        newVisit,newVisit
       );
-      setMedications([...medications, ...visits, response.data]);
-      setNewMedication({ name: "", dosage: "", frequency: "" , date: "", doctorName: "", reason: "" });
+      setVisits([ ...visits, response.data]);
+      setNewVisit({ name: "", dosage: "", frequency: "" , date: "", doctorName: "", reason: "" });
     } catch (error) {
       console.error("Error adding medication:", error);
     }
   };
 
-  const editMeditcation = async (id) => {
+  const editVisit = async (id) => {
    try{
-     await axios.put(`http://localhost:5000/delete-medications/${id}`);
-    const updatedOne = medications.filter(
+     await axios.put(`http://localhost:5000/edit-medications/${id}`);
+    const updatedOne = visits.filter(
         (medication) => medication._id !== id
     );
-    setMedications(updatedOne);
+    setVisits(updatedOne);
   } catch (error) {
     console.error("Error deleting medication:", error);
   }
 };
 
-  const deleteMedication = async (id) => {
+  const deleteVisit = async (id) => {
     try {
       await axios.delete(`http://localhost:5000/delete-medications/${id}`);
-      const updatedMedications = medications.filter(
+      const updatedMedications = visits.filter(
         (medication) => medication._id !== id
       );
-      setMedications(updatedMedications);
+      setVisits(updatedMedications);
     } catch (error) {
       console.error("Error deleting medication:", error);
     }
@@ -90,112 +85,74 @@ const Middle = () => {
           <input
             type="text"
             placeholder="Doctor Name"
-            value={newMedication.doctorName}
+            value={newVisit.doctorName}
             onChange={(e) =>
-              setNewMedication({ ...newMedication, doctorName: e.target.value })
+              setNewVisit({ ...newVisit, doctorName: e.target.value })
             }
           />
           <input
             type="text"
-            placeholder="Reason"
-            value={newMedication.reason}
+            placeholder="Description"
+            value={newVisit.reason}
             onChange={(e) =>
-                setNewMedication({ ...newMedication, reason: e.target.value })
+                setNewVisit({ ...newVisit, reason: e.target.value })
             }
           />
 {/* old start */}
 <input
             type="text"
             placeholder="Medication Name"
-            value={newMedication.name}
+            value={newVisit.name}
             onChange={(e) =>
-              setNewMedication({ ...newMedication, name: e.target.value })
+              setNewVisit({ ...newVisit, name: e.target.value })
             }
           />
           <input
             type="text"
-            placeholder="Dosage"
-            value={newMedication.dosage}
+            placeholder="Hospital"
+            value={newVisit.dosage}
             onChange={(e) =>
-              setNewMedication({ ...newMedication, dosage: e.target.value })
+              setNewVisit({ ...newVisit, dosage: e.target.value })
             }
           />
           <input
-            type="text"
+            type="file" accept=".pdf, .doc, .docx"
             placeholder="Frequency"
-            value={newMedication.frequency}
+            value={newVisit.frequency}
             onChange={(e) =>
-              setNewMedication({ ...newMedication, frequency: e.target.value })
+              setNewVisit({ ...newVisit, frequency: e.target.value })
             }
           />
              <input
             type= "date"
             placeholder="Date"
-            value={newMedication.date}
-            onChange={(e) => setNewMedication({ ...newMedication, date: e.target.value })}
+            value={newVisit.date}
+            onChange={(e) => setNewVisit({ ...newVisit, date: e.target.value })}
           />
 
 
-          <button type="submit" onClick={addMedication} className="submmitbutton">
+          <button type="submit" onClick={addVisit} className="submmitbutton">
             Submit
           </button>
           </form>
         </div>
-        <ul>
-          {visits.map((visit) => (
-            <li key={visit._id}>
-              {editingVisit === visit ? (
-                <div>
-                  <input
-                    type="text"
-                    value={visit.date}
-                    onChange={(e) =>
-                      setEditingVisit({ ...visit, date: e.target.value })
-                    }
-                  />
-                  <input
-                    type="text"
-                    value={visit.doctorName}
-                    onChange={(e) =>
-                      setEditingVisit({ ...visit, doctorName: e.target.value })
-                    }
-                  />
-                  <input
-                    type="text"
-                    value={visit.reason}
-                    onChange={(e) =>
-                      setEditingVisit({ ...visit, reason: e.target.value })
-                    }
-                  />
-                
-                </div>
-              ) : (
-                <div>
-                  <p>Date: {visit.date}</p>
-                  <p>Doctor: {visit.doctorName}</p>
-                  <p>Reason: {visit.reason}</p>
-                 
-                </div>
-              )}
-            </li>
-          ))}
-        </ul>
+      
 
 <div className="medications-table">
           
           <table className="medications-table">
          
             <tbody>
-              {medications.map((medication) => (
+              {visits.map((medication) => (
                 <>
                    <thead>
               <tr>
                 <th>Date</th>
                 <th>Doctor</th>
-                <th>Reason</th>
+                <th>Description</th>
                 <th>Name</th>
-                <th>Dosage</th>
-                <th>Frequency</th>
+                <th>Hospital Name</th>
+                <th>File Upload</th>
                 <th>Delete</th>
                 <th>Edit</th>
               </tr>
@@ -208,12 +165,12 @@ const Middle = () => {
                   <td>{medication.dosage}</td>
                   <td>{medication.frequency}</td>
                   <td>
-                    <button onClick={() => deleteMedication(medication._id)}>
+                    <button onClick={() => deleteVisit(medication._id)}>
                       Delete
                     </button>
                   </td>
                   <td>
-                    <button onClick={() => editMeditcation(medication._id)}>
+                    <button onClick={() => setEditingVisit(medication._id)}>
                       Edit
                     </button>
                   </td>
